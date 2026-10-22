@@ -92,14 +92,27 @@ def seen_so_far(conn):
 
 
 # ---------------------------------------------------------------- the pipeline
-def process(path, original_name, actor="system", result=None):
+def sample_memory(name):
+    """For sample runs, compare only against the sample files that come before it in the set
+    (01, 02, ...), exactly like the original test run. So every visitor sees each file's planted
+    issue - e.g. 04 is always caught as a copy of 01 - instead of 'duplicate' because someone
+    else already tapped the same sample."""
+    from extract import file_fingerprint
+    seen = {"fingerprints": {}, "keys": {}}
+    for f in sorted(os.listdir(SAMPLES)):
+        if f.endswith(ALLOWED) and f < name:
+            seen["fingerprints"].setdefault(file_fingerprint(os.path.join(SAMPLES, f)), f)
+    return seen
+
+
+def process(path, original_name, actor="system", result=None, seen=None):
     """READ -> CHECK -> INVESTIGATE, then save with a full audit trail.
     If `result` is given (pre-computed demo data), Azure isn't called again."""
     with db() as conn:
         if result is None:
             data = extract(path)
             data["file"] = original_name
-            result = run_checks(data, BASELINE, FACTORS, seen_so_far(conn))
+            result = run_checks(data, BASELINE, FACTORS, seen if seen is not None else seen_so_far(conn))
             if result["status"] == "needs_review":
                 result["investigation"] = review_item(get_client(), os.getenv("OPENAI_DEPLOYMENT",
                                                                              "carbontrace-model"), result)
@@ -189,7 +202,7 @@ def try_sample(sample: str = Form(...)):
         raise HTTPException(404, "Sample not found")
     path = os.path.join(UPLOADS, f"{uuid.uuid4().hex}_{name}")
     shutil.copy(src, path)
-    sid = process(path, name, actor="Sample run")
+    sid = process(path, name, actor="Sample run", seen=sample_memory(name))
     return RedirectResponse(f"/item/{sid}", 303)
 
 
