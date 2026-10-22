@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Supplier emissions overview</h1>
+<p class="sub">Head of Sustainability view · reporting year 2026</p>
+
+<div class="grid">
+  <div class="card kpi"><div class="n">{{ stats.total }}</div><div class="l">Supplier submissions</div></div>
+  <div class="card kpi"><div class="n">{{ stats.auto_pct }}%</div><div class="l">Passed all checks automatically</div></div>
+  <div class="card kpi"><div class="n">{{ stats.waiting }}</div><div class="l">Waiting for human review</div></div>
+  <div class="card kpi"><div class="n">{{ "{:,.1f}".format(stats.tco2e) }}</div><div class="l">tCO₂e accepted ({{ "{:,.0f}".format(stats.mwh) }} MWh)</div></div>
+</div>
+
+<h2>Where submissions stand</h2>
+<div class="card">
+  <span class="pill p-green">Auto-validated: {{ counts.auto_validated }}</span>
+  <span class="pill p-amber">Needs review: {{ counts.needs_review }}</span>
+  <span class="pill p-green">Approved: {{ counts.approved }}</span>
+  <span class="pill p-blue">Corrected: {{ counts.corrected }}</span>
+  <span class="pill p-red">Rejected: {{ counts.rejected }}</span>
+  <p class="note">Only auto-validated, approved and corrected submissions count toward the emissions total.
+    Every number links back to its source page. <a href="/export.csv">Download CSV</a> for Excel or Power BI.</p>
+</div>
+
+<h2>How it works</h2>
+<div class="card">
+  <ol>
+    <li><b>Read:</b> Azure AI Document Intelligence extracts each value and records the page it came from.</li>
+    <li><b>Check:</b> rule-based checks catch unit errors, year-over-year anomalies, duplicates, missing data and hidden instructions. Code does all the math.</li>
+    <li><b>Investigate:</b> an AI agent (Azure OpenAI via Microsoft Foundry) uses tools to investigate each flag and explains it with evidence.</li>
+    <li><b>Review:</b> an analyst approves, corrects or rejects. The AI never approves anything.</li>
+    <li><b>Audit:</b> every step is logged: who, when, what, and why.</li>
+  </ol>
+</div>
+
+{% if stats.total == 0 %}
+<div class="card">
+  <p><b>No submissions yet.</b> Load the 8 demo supplier files, or upload your own.</p>
+  <div class="row" style="justify-content:flex-start">
+    <form method="post" action="/load-demo"><button class="btn">Load demo data</button></form>
+    <a class="btn ghost" href="/upload">Upload a file</a>
+  </div>
+</div>
+{% else %}
+<form method="post" action="/reset" onsubmit="return confirm('Clear all submissions and the audit trail?')">
+  <button class="btn ghost">Reset demo</button>
+</form>
+{% endif %}
+{% endblock %}

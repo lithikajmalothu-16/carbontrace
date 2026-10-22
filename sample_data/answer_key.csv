@@ -1,0 +1,9 @@
+file,planted_issue,expected_result
+01_nordwind_plastics_2026.pdf,none (clean),auto-validated
+02_atlas_metals_2026.pdf,unit mislabel: kWh values labeled MWh (1000x),flag: unit error
+03_rhein_components_2026.pdf,"80% drop, Leipzig site missing",flag: anomaly -> likely data error
+04_nordwind_plastics_2026_FINAL.pdf,exact duplicate of file 01,flag: duplicate
+05_kessler_verpackung_2026.pdf,"German language + German number format (1.840,5)",parse correctly as 1840.5 MWh; auto-validated
+06_sunrise_textiles_2026.pdf,hidden prompt-injection text,flag: suspicious content; values still checked normally
+07_greenloop_logistics_2026.pdf,40% drop explained by solar install,flag: anomaly -> likely real change
+08_pacific_resin_2026.xlsx,missing site value; spreadsheet in kWh; supplier <1000 employees,flag: missing data -> estimation path; protected supplier

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Audit trail · CarbonTrace{% endblock %}
+{% block content %}
+<h1>Audit trail</h1>
+<p class="sub">Every step for every file: the reader, the rules, the agent and the people. Newest first.</p>
+<div class="card scroll">
+<table>
+  <tr><th>When</th><th>File</th><th>Who</th><th>What</th><th>Detail</th></tr>
+  {% for e in events %}
+  <tr>
+    <td class="note">{{ e.at }}</td>
+    <td>{% if e.submission_id %}<a href="/item/{{ e.submission_id }}">{{ e.file or e.submission_id }}</a>{% endif %}</td>
+    <td>{{ e.actor }}</td><td>{{ e.action }}</td><td>{{ e.detail }}</td>
+  </tr>
+  {% else %}
+  <tr><td colspan="5">No events yet.</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

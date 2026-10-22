@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ res.supplier or r.file }} · CarbonTrace{% endblock %}
+{% block content %}
+<p><a href="/queue">← Review queue</a></p>
+<div class="row">
+  <div>
+    <h1>{{ res.matched_supplier or res.supplier or r.file }}</h1>
+    <p class="sub">{{ r.file }} · {{ res.country or '?' }} · {{ res.year or '?' }} · reported in {{ res.unit_reported or '?' }}
+      {% if res.language == 'de' %}· German document{% endif %}
+      {% for t in res.tags %}<span class="pill p-blue">{{ t.replace('_', ' ') }}</span>{% endfor %}</p>
+  </div>
+  <a class="btn ghost" href="/file/{{ r.id }}" target="_blank" rel="noopener">Open source file</a>
+</div>
+
+{% set status_cls = {"auto_validated": "ok", "approved": "ok", "corrected": "ok", "rejected": "danger", "needs_review": "warn"} %}
+<p class="{{ status_cls.get(r.status, 'warn') }}"><b>Status:</b> {{ r.status.replace('_', ' ') }}
+  {% if r.final_tco2e is not none %} · accepted total {{ "{:,.1f}".format(r.final_mwh) }} MWh = {{ "{:,.1f}".format(r.final_tco2e) }} tCO₂e{% endif %}</p>
+
+<div class="two">
+  <div class="card">
+    <h2 style="margin-top:0">Extracted values</h2>
+    <div class="scroll"><table>
+      <tr><th>Site</th><th>As written</th><th>MWh</th><th>Source</th></tr>
+      {% for s in res.site_values %}
+      <tr><td>{{ s.label }}</td><td>{{ s.raw if s.raw is not none else '—' }}</td>
+        <td>{{ "{:,.1f}".format(s.mwh) if s.mwh is not none else 'missing' }}</td><td class="note">{{ s.source }}</td></tr>
+      {% endfor %}
+      <tr><td><b>Total</b></td><td></td><td><b>{{ "{:,.1f}".format(res.total_mwh) if res.total_mwh else 'missing' }}</b></td>
+        <td class="note">{{ res.total_source or '' }}</td></tr>
+    </table></div>
+    <p class="note">Emissions = MWh × grid factor {{ res.emission_factor }} tCO₂e/MWh (illustrative) ·
+      {{ "{:,.1f}".format(res.emissions_tco2e) if res.emissions_tco2e else '–' }} tCO₂e as submitted ·
+      {% if res.yoy_change_pct is not none %}{{ "%+.1f"|format(res.yoy_change_pct) }}% vs 2025{% endif %}</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Rule checks</h2>
+    {% for f in res.flags %}
+      <p class="{{ 'danger' if f.type in ('suspicious_content', 'unit_error') else 'warn' }}">
+        <b>{{ f.type.replace('_', ' ') }}:</b> {{ f.detail }}</p>
+    {% else %}
+      <p class="ok">All checks passed: units, year-over-year, duplicates, missing data, hidden instructions.</p>
+    {% endfor %}
+    <p class="note">Fingerprint (SHA-256): {{ res.audit.fingerprint_sha256[:16] }}…</p>
+  </div>
+</div>
+
+{% if inv %}
+<div class="card">
+  <div class="row">
+    <h2 style="margin:0">Investigation</h2>
+    <span><span class="pill {{ 'p-red' if inv.label in ('security_concern','likely_data_error') else 'p-amber' if inv.label in ('missing_information','duplicate') else 'p-blue' }}">{{ inv.label.replace('_', ' ') }}</span>
+      <span class="pill">decided by {{ inv.label_source }}</span></span>
+  </div>
+  <p>{{ inv.explanation }}</p>
+  {% if inv.supplier_question %}<p><b>Suggested question for the supplier:</b> {{ inv.supplier_question }}</p>{% endif %}
+  {% if inv.unverified_numbers %}
+    <p class="warn"><b>Grounding check:</b> the AI wrote {{ inv.unverified_numbers|join(', ') }}, which no tool produced. Verify before relying on it.</p>
+  {% endif %}
+  {% if inv.agent_label %}<p class="note">A rule overrode the agent's label ({{ inv.agent_label.replace('_', ' ') }}).</p>{% endif %}
+  {% if inv.trace %}
+    <p class="note" style="margin-bottom:4px">Tools the agent chose, in order:</p>
+    <div class="trace">{% for t in inv.trace %}{{ loop.index }}. {{ t.tool }}{% if t.args %} {{ t.args }}{% endif %}<br>{% endfor %}</div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if r.status == 'needs_review' %}
+<div class="card">
+  <h2 style="margin-top:0">Your decision</h2>
+  <p class="note">The AI never approves anything. A named reviewer decides, and the decision is logged.</p>
+  <form method="post" action="/item/{{ r.id }}/decide">
+    <label for="reviewer">Reviewer name</label>
+    <input type="text" id="reviewer" name="reviewer" required maxlength="60" placeholder="e.g. Priya (ESG Analyst)">
+    <label for="corrected_mwh">Corrected total in MWh (only for Correct)</label>
+    <input type="text" id="corrected_mwh" name="corrected_mwh" inputmode="decimal" placeholder="e.g. 3100">
+    <label for="reason">Reason (required to correct or reject)</label>
+    <textarea id="reason" name="reason" rows="2" maxlength="500" placeholder="e.g. Supplier confirmed values were in kWh"></textarea>
+    <div class="row" style="justify-content:flex-start; margin-top:12px">
+      <button class="btn" name="action" value="approve">Approve</button>
+      <button class="btn amber" name="action" value="correct">Correct</button>
+      <button class="btn red" name="action" value="reject">Reject</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2 style="margin-top:0">Audit trail for this file</h2>
+  <div class="scroll"><table>
+    <tr><th>When</th><th>Who</th><th>What</th><th>Detail</th></tr>
+    {% for e in events %}
+    <tr><td class="note">{{ e.at }}</td><td>{{ e.actor }}</td><td>{{ e.action }}</td><td>{{ e.detail }}</td></tr>
+    {% endfor %}
+  </table></div>
+</div>
+{% endblock %}

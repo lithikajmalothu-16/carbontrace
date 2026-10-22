@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CarbonTrace{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="logo" href="/">Carbon<span>Trace</span></a>
+    <nav>
+      <a href="/" class="{{ 'on' if request.url.path == '/' }}">Overview</a>
+      <a href="/upload" class="{{ 'on' if request.url.path == '/upload' }}">Upload</a>
+      <a href="/queue" class="{{ 'on' if request.url.path == '/queue' }}">Review queue</a>
+      <a href="/audit" class="{{ 'on' if request.url.path == '/audit' }}">Audit trail</a>
+    </nav>
+  </div>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>CarbonTrace · AI-assisted supplier emissions validation · Demo with synthetic supplier data · Built on Microsoft Azure</footer>
+<script>
+  // Show "processing" while Azure reads and checks the file (takes ~15-30 seconds)
+  document.querySelectorAll('form[data-busy]').forEach(f => f.addEventListener('submit', () => f.classList.add('busy')));
+</script>
+</body>
+</html>

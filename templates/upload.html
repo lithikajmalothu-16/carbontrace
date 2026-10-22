@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Upload · CarbonTrace{% endblock %}
+{% block content %}
+<h1>Submit a supplier file</h1>
+<p class="sub">The file is read, checked and investigated live on Azure. It takes about 15–30 seconds.</p>
+{% if error %}<p class="danger">{{ error }}</p>{% endif %}
+
+<div class="two">
+  <div class="card">
+    <h2 style="margin-top:0">Try a sample supplier file</h2>
+    <p class="note">Each one hides a different real-world problem.</p>
+    <form method="post" action="/try-sample" data-busy>
+      <div class="samples">
+        {% set notes = {
+          "01": "Clean report", "02": "Wrong units", "03": "80% drop",
+          "04": "Sent twice", "05": "German format", "06": "Hidden AI instructions",
+          "07": "Solar install", "08": "Missing value (Excel)" } %}
+        {% for s in samples %}
+        <button name="sample" value="{{ s }}">{{ s[3:].rsplit('_2026', 1)[0].replace('_', ' ').title() }}
+          <small>{{ notes.get(s[:2], '') }}</small></button>
+        {% endfor %}
+      </div>
+      <p class="ok busy-msg">Reading, checking and investigating… please wait.</p>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Upload your own</h2>
+    <p class="note">PDF or Excel (.xlsx), up to 3 MB. Use test data only, not confidential files.</p>
+    <form method="post" action="/upload" enctype="multipart/form-data" data-busy>
+      <input type="file" name="file" accept=".pdf,.xlsx" required>
+      <p><button class="btn">Process file</button></p>
+      <p class="ok busy-msg">Reading, checking and investigating… please wait.</p>
+    </form>
+  </div>
+</div>
+{% endblock %}

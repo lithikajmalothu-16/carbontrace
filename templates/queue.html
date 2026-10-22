@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Review queue · CarbonTrace{% endblock %}
+{% macro label_pill(label) -%}
+  {% set cls = {"security_concern": "p-red", "likely_data_error": "p-red", "missing_information": "p-amber",
+                "likely_real_change": "p-blue", "duplicate": "p-amber"} %}
+  <span class="pill {{ cls.get(label, '') }}">{{ label.replace('_', ' ') }}</span>
+{%- endmacro %}
+{% block content %}
+<h1>Review queue</h1>
+<p class="sub">ESG Analyst view · riskiest items first · {{ waiting|length }} waiting</p>
+
+{% for i in waiting %}
+<a class="card queue-item" href="/item/{{ i.id }}">
+  <div class="row">
+    <b>{{ i.res.matched_supplier or i.res.supplier or i.file }}</b>
+    <span>{{ label_pill(i.inv.label or 'needs_review') }}
+      <span class="pill">decided by {{ i.inv.label_source or 'rules' }}</span></span>
+  </div>
+  <div class="note">{{ i.file }}</div>
+  <p style="margin:8px 0 0">{{ (i.inv.explanation or '')[:220] }}{% if (i.inv.explanation or '')|length > 220 %}…{% endif %}</p>
+  {% if i.inv.unverified_numbers %}<p class="warn" style="margin-top:8px">Check: the AI used numbers not found in the data</p>{% endif %}
+</a>
+{% else %}
+<div class="card"><p>Nothing waiting for review.</p>
+  <p class="note">Go to <a href="/upload">Upload</a> to process a supplier file, or load demo data from the <a href="/">Overview</a>.</p></div>
+{% endfor %}
+
+{% if done %}
+<h2>Completed</h2>
+<div class="card scroll">
+<table>
+  <tr><th>Supplier</th><th>Status</th><th>MWh</th><th>tCO₂e</th></tr>
+  {% for i in done %}
+  <tr>
+    <td><a href="/item/{{ i.id }}">{{ i.res.matched_supplier or i.res.supplier or i.file }}</a><div class="note">{{ i.file }}</div></td>
+    <td>{% set c = {"auto_validated": "p-green", "approved": "p-green", "corrected": "p-blue", "rejected": "p-red"} %}
+      <span class="pill {{ c.get(i.status, '') }}">{{ i.status.replace('_', '-') }}</span></td>
+    <td>{{ "{:,.1f}".format(i.final_mwh) if i.final_mwh is not none else "–" }}</td>
+    <td>{{ "{:,.1f}".format(i.final_tco2e) if i.final_tco2e is not none else "–" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endif %}
+{% endblock %}
