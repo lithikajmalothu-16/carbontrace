@@ -195,10 +195,12 @@ def try_sample(sample: str = Form(...)):
 
 @app.post("/load-demo")
 def load_demo():
-    """Load the 8 sample results from results.json (already processed) - no Azure cost."""
-    results_path = os.path.join(BASE, "results.json")
-    if not os.path.exists(results_path):
-        raise HTTPException(400, "Run run_pipeline.py and agent.py first to create results.json")
+    """Load the 8 sample results (already processed on Azure) - no extra Azure cost.
+    Uses sample_data/demo_results.json (committed to the repo), or results.json from a local run."""
+    results_path = next((p for p in (os.path.join(SAMPLES, "demo_results.json"), os.path.join(BASE, "results.json"))
+                         if os.path.exists(p)), None)
+    if not results_path:
+        raise HTTPException(400, "No demo results yet - run run_pipeline.py and agent.py first")
     with open(results_path, encoding="utf-8") as f:
         results = json.load(f)
     for r in results:
