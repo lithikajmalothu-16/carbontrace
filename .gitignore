@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 uploads/
 carbontrace.db
+results.json
