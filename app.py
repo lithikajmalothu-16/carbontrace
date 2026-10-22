@@ -151,7 +151,14 @@ def overview(request: Request):
     counts = {s: sum(1 for r in rows if r["status"] == s)
               for s in ("auto_validated", "needs_review", "approved", "corrected", "rejected")}
     total = len(rows)
-    accepted = [r for r in rows if r["status"] in ("auto_validated", "approved", "corrected")]
+    # Count each unique supplier file once, so re-submitting the same file never double-counts emissions
+    accepted, seen_files = [], set()
+    for r in rows:
+        if r["status"] in ("auto_validated", "approved", "corrected"):
+            fp = json.loads(r["result"])["audit"]["fingerprint_sha256"]
+            if fp not in seen_files:
+                seen_files.add(fp)
+                accepted.append(r)
     stats = {
         "total": total,
         "auto_pct": round(100 * counts["auto_validated"] / total) if total else 0,
