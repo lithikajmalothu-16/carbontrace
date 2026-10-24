@@ -2,6 +2,8 @@
 
 **AI-assisted validation of supplier emissions data, built on Microsoft Azure.**
 
+Live App link : https://carbontrace-lj-eafvdrhmgagyfhcu.centralus-01.azurewebsites.net/
+
 Large companies must report their suppliers' emissions (Scope 3), for example under California's SB 253 (supplier reporting proposed from 2027) and the EU's CSRD. Supplier data arrives as messy PDFs, scans and spreadsheets in different units, languages and formats, and analysts check it by hand. Errors slip through, and auditors can't trace numbers back to their source.
 
 CarbonTrace reads each supplier file, checks it with deterministic rules, uses an AI agent to investigate anything flagged, and sends it to a human reviewer, with every number traceable to its source page.
