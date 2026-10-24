@@ -1,70 +1,97 @@
+/* CarbonTrace design system
+   Type: Inter Tight. Colors: charcoal header, white page, sky-blue actions.
+   Status is shown with colored text + a dot, never with filled background shapes. */
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap");
+
 :root {
-  --ink: #14211c;
-  --muted: #5b6b64;
-  --line: #dfe5e2;
-  --bg: #f5f7f6;
-  --card: #ffffff;
-  --brand: #0f5c46;
-  --brand-soft: #e3f1ec;
-  --red: #b42318;   --red-soft: #fdecea;
-  --amber: #a15c07; --amber-soft: #fef3e2;
-  --blue: #175cd3;  --blue-soft: #e8f0fd;
-  --green: #067647; --green-soft: #e6f6ee;
-  --grey-soft: #eef1f0;
+  --ink: #161A19;         /* main text */
+  --muted: #5B615F;       /* secondary text (passes 4.5:1 on white) */
+  --line: #DCDFDD;        /* thin dividers */
+  --bg: #FFFFFF;          /* page */
+  --header: #1D2120;      /* charcoal band */
+  --sky: #8CCFF5;         /* primary buttons */
+  --sky-hover: #6FBDEB;
+  --red: #B42318;         /* security / data errors */
+  --amber: #A34A00;       /* needs information / duplicates */
+  --blue: #2C5F86;        /* likely real change / corrected */
+  --green: #1F7A45;       /* approved / passed */
+  --radius-pill: 999px;
 }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-       color: var(--ink); background: var(--bg); line-height: 1.5; }
-a { color: var(--brand); }
-header { background: var(--ink); color: #fff; }
-.bar { max-width: 1100px; margin: 0 auto; padding: 14px 16px; display: flex; flex-wrap: wrap;
-       gap: 8px 24px; align-items: center; }
-.logo { font-weight: 700; font-size: 18px; color: #fff; text-decoration: none; letter-spacing: .2px; }
-.logo span { color: #7fd4b4; }
-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
-nav a { color: #cfe3db; text-decoration: none; font-size: 15px; padding: 4px 0; }
-nav a:hover, nav a.on { color: #fff; border-bottom: 2px solid #7fd4b4; }
-main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
-h1 { font-size: 26px; margin: 0 0 4px; }
-h2 { font-size: 19px; margin: 28px 0 10px; }
-.sub { color: var(--muted); margin: 0 0 20px; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 14px; }
-.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.kpi .n { font-size: 30px; font-weight: 700; }
-.kpi .l { color: var(--muted); font-size: 14px; }
-.pill { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px;
-        background: var(--grey-soft); color: var(--muted); margin: 2px 4px 2px 0; white-space: nowrap; }
-.p-red { background: var(--red-soft); color: var(--red); }
-.p-amber { background: var(--amber-soft); color: var(--amber); }
-.p-blue { background: var(--blue-soft); color: var(--blue); }
-.p-green { background: var(--green-soft); color: var(--green); }
-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { color: var(--muted); font-weight: 600; font-size: 13px; }
-.scroll { overflow-x: auto; }
+body { margin: 0; font-family: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+       color: var(--ink); background: var(--bg); line-height: 1.5; font-size: 16px; }
+a { color: var(--ink); text-underline-offset: 3px; }
+a:hover { color: var(--blue); }
+
+/* ---------- header: charcoal band with outlined pill links ---------- */
+header { background: var(--header); color: #fff; }
+.bar { max-width: 1100px; margin: 0 auto; padding: 20px 16px; display: flex; flex-wrap: wrap;
+       gap: 12px 32px; align-items: center; justify-content: space-between; }
+.logo { font-weight: 500; font-size: 24px; letter-spacing: -0.8px; color: #fff; text-decoration: none; text-transform: lowercase; }
+.logo span { color: inherit; }
+nav { display: flex; flex-wrap: wrap; gap: 8px; }
+nav a { color: #fff; text-decoration: none; font-size: 15px; text-transform: lowercase;
+        padding: 7px 18px; border: 1.5px solid #fff; border-radius: var(--radius-pill); }
+nav a:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+nav a.on { background: #fff; color: var(--header); font-weight: 500; }
+
+/* ---------- page type ---------- */
+main { max-width: 1100px; margin: 0 auto; padding: 48px 16px 64px; }
+h1 { font-size: clamp(36px, 6vw, 56px); font-weight: 500; letter-spacing: -0.04em; line-height: 1.04; margin: 0 0 10px; }
+h2 { font-size: 24px; font-weight: 500; letter-spacing: -0.03em; margin: 40px 0 12px; }
+.sub { color: var(--muted); margin: 0 0 28px; }
+b, strong { font-weight: 600; }
+
+/* ---------- sections: ruled lines instead of boxed cards ---------- */
+.card { background: none; border: 0; border-top: 1.5px solid var(--ink); border-radius: 0;
+        padding: 18px 0; margin-bottom: 8px; }
+.grid { display: grid; gap: 0 24px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid .card { border-top: 1.5px solid var(--ink); }
+.kpi .n { font-size: 46px; font-weight: 500; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.kpi .l { color: var(--muted); font-size: 15px; }
+.two { display: grid; gap: 0 32px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
-.btn { display: inline-block; border: 1px solid var(--brand); background: var(--brand); color: #fff;
-       padding: 10px 16px; border-radius: 8px; font-size: 15px; cursor: pointer; text-decoration: none; min-height: 44px; }
-.btn.ghost { background: #fff; color: var(--brand); }
-.btn.red { background: var(--red); border-color: var(--red); }
-.btn.amber { background: var(--amber); border-color: var(--amber); }
-input[type=text], input[type=file], textarea, select { width: 100%; padding: 10px; border: 1px solid var(--line);
-       border-radius: 8px; font: inherit; background: #fff; min-height: 44px; }
-label { font-weight: 600; font-size: 14px; display: block; margin: 10px 0 4px; }
+.scroll { overflow-x: auto; }
+
+/* ---------- status labels: colored text + dot, no background shape ---------- */
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500;
+        color: var(--muted); margin: 2px 14px 2px 0; white-space: nowrap; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid currentColor; }
+.p-red { color: var(--red); }
+.p-amber { color: var(--amber); }
+.p-blue { color: var(--blue); }
+.p-green { color: var(--green); }
+.p-red::before, .p-amber::before, .p-blue::before, .p-green::before { background: currentColor; }
+
+/* ---------- notices: same idea, colored text with a dot ---------- */
+.warn, .danger, .ok { background: none; padding: 0 0 0 16px; font-size: 15px; position: relative; }
+.warn::before, .danger::before, .ok::before { content: ""; position: absolute; left: 0; top: .6em;
+        width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.warn { color: var(--amber); }
+.danger { color: var(--red); }
+.ok { color: var(--green); }
+
+/* ---------- tables ---------- */
+table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+th, td { text-align: left; padding: 13px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th:first-child, td:first-child { padding-left: 0; }
+th { color: var(--muted); font-weight: 500; font-size: 14px; }
+
+/* ---------- buttons: rounded pills ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px;
+       border: 1.5px solid var(--sky); background: var(--sky); color: #111; border-radius: var(--radius-pill);
+       font: inherit; font-size: 16px; font-weight: 500; cursor: pointer; text-decoration: none; }
+.btn:hover { background: var(--sky-hover); border-color: var(--sky-hover); color: #111; }
+.btn.ghost { background: transparent; border-color: var(--ink); color: var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
+.btn.red { background: var(--red); border-color: var(--red); color: #fff; }
+.btn.amber { background: var(--amber); border-color: var(--amber); color: #fff; }
+
+/* ---------- forms ---------- */
+input[type=text], input[type=file], textarea, select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--line);
+       border-radius: 12px; font: inherit; background: #fff; min-height: 44px; color: var(--ink); }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
+label { font-weight: 500; font-size: 14px; display: block; margin: 12px 0 4px; }
 .note { font-size: 14px; color: var(--muted); }
-.warn { background: var(--amber-soft); color: var(--amber); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
-.danger { background: var(--red-soft); color: var(--red); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
-.ok { background: var(--green-soft); color: var(--green); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
-.queue-item { display: block; text-decoration: none; color: inherit; }
-.queue-item:hover { border-color: var(--brand); }
-.trace { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--grey-soft);
-         padding: 8px 10px; border-radius: 6px; overflow-x: auto; }
-.two { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-.samples { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.samples button { text-align: left; background: #fff; color: var(--ink); border: 1px solid var(--line);
-                  border-radius: 8px; padding: 10px 12px; font: inherit; cursor: pointer; width: 100%; min-height: 44px; }
-.samples button:hover { border-color: var(--brand); }
-.samples small { color: var(--muted); display: block; }
-footer { color: var(--muted); font-size: 13px; text-align: center; padding: 20px 16px 40px; }
-.busy-msg { display: none; }
-form.busy .busy-msg { display: block; }
+
+/* ---------- review
