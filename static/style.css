@@ -93,5 +93,32 @@ input[type=text], input[type=file], textarea, select { width: 100%; padding: 11p
 input:focus, textarea:focus, select:focus { outline: none; border-color: var(--ink); }
 label { font-weight: 500; font-size: 14px; display: block; margin: 12px 0 4px; }
 .note { font-size: 14px; color: var(--muted); }
+/* ---------- review queue ---------- */
+.queue-item { display: block; text-decoration: none; color: inherit;
+              border-top: 1px solid var(--line); padding: 22px 0; margin: 0; }
+.queue-item:first-of-type { border-top: 1.5px solid var(--ink); }
+.queue-item b { font-size: 18px; font-weight: 600; }
+.queue-item .note { margin-top: 2px; }
+.queue-item p { color: var(--muted); margin: 10px 0 0; max-width: 820px; }
+.queue-item p.warn { color: var(--amber); }
+.queue-item:hover b { color: var(--blue); }
+.queue-item:hover { color: inherit; }
 
-/* ---------- review
+/* ---------- sample buttons on the upload page ---------- */
+.samples { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.samples button { text-align: left; background: #fff; color: var(--ink); border: 1.5px solid var(--line);
+                  border-radius: 14px; padding: 12px 14px; font: inherit; font-weight: 500; cursor: pointer; width: 100%; min-height: 44px; }
+.samples button:hover { border-color: var(--ink); }
+.samples small { color: var(--muted); display: block; font-weight: 400; }
+
+/* ---------- agent trace box ---------- */
+.trace { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: #F3F5F4;
+         padding: 10px 12px; border-radius: 10px; overflow-x: auto; }
+
+/* ---------- footer: centred, with breathing room ---------- */
+footer { max-width: 1100px; margin: 48px auto 0; padding: 28px 16px 48px;
+         border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; text-align: center; }
+
+/* ---------- "please wait" message while a file is processed ---------- */
+.busy-msg { display: none; }
+form.busy .busy-msg { display: block; }
