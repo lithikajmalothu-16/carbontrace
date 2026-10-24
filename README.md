@@ -58,6 +58,8 @@ Rule checks match the answer key on **8 of 8** files.
 | `sample_data/` | Synthetic supplier files, prior-year baseline, illustrative emission factors, answer key |
 
 ## Run locally
+## Run it yourself
+Needs your own Azure AI Document Intelligence and Azure OpenAI keys (see `.env.example`).
 ```
 python -m venv .venv
 .venv\Scripts\activate          (Windows)   |   source .venv/bin/activate   (Mac/Linux)
