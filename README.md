@@ -2,7 +2,9 @@
 
 **AI-assisted validation of supplier emissions data, built on Microsoft Azure.**
 
-Live App link : https://carbontrace-lj-eafvdrhmgagyfhcu.centralus-01.azurewebsites.net/
+> **Live demo offline:** the Azure trial hosting it has ended. Run it locally (below) and click **Load demo data** to see the full workflow from saved Azure results, with no keys needed.
+>
+> **How it was built, and what went wrong along the way:** [docs/build-notes.md](docs/build-notes.md)
 
 Large companies must report their suppliers' emissions (Scope 3), for example under California's SB 253 (supplier reporting proposed from 2027) and the EU's CSRD. Supplier data arrives as messy PDFs, scans and spreadsheets in different units, languages and formats, and analysts check it by hand. Errors slip through, and auditors can't trace numbers back to their source.
 
@@ -57,9 +59,10 @@ Rule checks match the answer key on **8 of 8** files.
 | `app.py` | Website: overview, upload, review queue, item review, audit trail, CSV export |
 | `sample_data/` | Synthetic supplier files, prior-year baseline, illustrative emission factors, answer key |
 
-## Run locally
 ## Run it yourself
-Needs your own Azure AI Document Intelligence and Azure OpenAI keys (see `.env.example`).
+**Demo mode (no keys):** install, run `uvicorn app:app --reload`, open the site and click **Load demo data**.
+
+**Full pipeline:** needs your own Azure AI Document Intelligence and Azure OpenAI keys (see `.env.example`).
 ```
 python -m venv .venv
 .venv\Scripts\activate          (Windows)   |   source .venv/bin/activate   (Mac/Linux)
