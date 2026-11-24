@@ -149,6 +149,8 @@ FastAPI with Jinja2 templates and SQLite. Each page maps to a role on a five-per
 
 ## Status
 
+**Demo video:** [watch the working app](https://drive.google.com/drive/folders/1Cp6_BA9hFozzh5kQ5lQyIJSqmZon88VL)
+
 The Azure trial behind the live demo has ended, so the hosted app is offline. The code runs locally (see the README), and **Load demo data** shows the full review workflow from the saved Azure results without any keys. Processing new files needs your own Document Intelligence and Azure OpenAI keys in `.env`.
 
 ## What I'd do next

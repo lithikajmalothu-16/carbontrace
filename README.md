@@ -2,6 +2,8 @@
 
 **AI-assisted validation of supplier emissions data, built on Microsoft Azure.**
 
+> **▶ Demo video:** [watch the working app (67 sec)](https://drive.google.com/drive/folders/1Cp6_BA9hFozzh5kQ5lQyIJSqmZon88VL)
+>
 > **Live demo offline:** the Azure trial hosting it has ended. Run it locally (below) and click **Load demo data** to see the full workflow from saved Azure results, with no keys needed.
 >
 > **How it was built, and what went wrong along the way:** [docs/build-notes.md](docs/build-notes.md)
